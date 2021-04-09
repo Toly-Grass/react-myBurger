@@ -1,0 +1,16 @@
+@font-face {
+  font-family: OpenSansRegular;
+  src: url('./assets/Fonts/OpenSans-Regular.ttf');
+}
+
+@font-face {
+  font-family: OpenSansBold;
+  src: url('./assets/Fonts/OpenSans-Bold.ttf');
+  font-weight: bold;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: OpenSansRegular;
+}
