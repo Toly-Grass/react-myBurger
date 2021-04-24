@@ -4,6 +4,7 @@ import classes from './ContactData.css';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import axios from '../../../axios-orders';
+import { connect } from 'react-redux';
 
 class ContactData extends Component {
 	state = {
@@ -104,8 +105,8 @@ class ContactData extends Component {
 			contactInfo[inputElementId] = this.state.orderForm[inputElementId].value;
 		}
 		const order = {
-			ingredients: this.props.ingredients,
-			price: this.props.totalPrice,
+			ingredients: this.props.ings,
+			price: this.props.tPrice,
 			contactInfo: contactInfo
 		};
 		axios
@@ -135,7 +136,7 @@ class ContactData extends Component {
 		return isValid;
 	}
 
-	changeHandler = (event, inputId) => {
+	changedHandler = (event, inputId) => {
 		const updatedOrderForm = {
 			...this.state.orderForm
 		};
@@ -176,7 +177,7 @@ class ContactData extends Component {
 						invalid={!formElement.config.isValid}
 						shouldValidate={formElement.config.validation.required}
 						touched={formElement.config.touched}
-						changed={(event) => this.changeHandler(event, formElement.id)}
+						changed={(event) => this.changedHandler(event, formElement.id)}
 					/>
 				))}
 				<Button btnType="Success" isDisable={!this.state.formIsValid}>
@@ -196,4 +197,11 @@ class ContactData extends Component {
 	}
 }
 
-export default ContactData;
+const mapStateToProps = (state) => {
+	return {
+		ings: state.ingredients,
+		tPrice: state.totalPrice
+	};
+};
+
+export default connect(mapStateToProps)(ContactData);
