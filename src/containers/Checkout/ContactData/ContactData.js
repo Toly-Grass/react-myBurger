@@ -7,6 +7,7 @@ import axios from '../../../axios-orders';
 import { connect } from 'react-redux';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../../store/actions/index';
+import { checkValidity } from '../../../shared/utility';
 
 class ContactData extends Component {
 	state = {
@@ -108,22 +109,11 @@ class ContactData extends Component {
 		const order = {
 			ingredients: this.props.ings,
 			price: this.props.tPrice,
-			contactInfo: contactInfo
+			contactInfo: contactInfo,
+			userId: this.props.userId
 		};
-		this.props.onOrderBurger(order);
+		this.props.onOrderBurger(order, this.props.token);
 	};
-
-	checkValidity(value, rules) {
-		let isValid = false;
-		if (rules.required) {
-			isValid = value.trim() !== '';
-		}
-		if (rules.minLength && rules.maxLength) {
-			isValid = value.length >= rules.minLength && value.length <= rules.maxLength;
-		}
-
-		return isValid;
-	}
 
 	changedHandler = (event, inputId) => {
 		const updatedOrderForm = {
@@ -133,7 +123,7 @@ class ContactData extends Component {
 			...this.state.orderForm[inputId]
 		};
 		updatedformElement.value = event.target.value;
-		updatedformElement.isValid = this.checkValidity(updatedformElement.value, updatedformElement.validation);
+		updatedformElement.isValid = checkValidity(updatedformElement.value, updatedformElement.validation);
 		updatedformElement.touched = true;
 		updatedOrderForm[inputId] = updatedformElement;
 		let formIsValid = true;
@@ -190,14 +180,16 @@ const mapStateToProps = (state) => {
 	return {
 		ings: state.burgerBuilder.ingredients,
 		tPrice: state.burgerBuilder.totalPrice,
-		loading: state.order.loading
+		loading: state.order.loading,
+		token: state.auth.token,
+		userId: state.auth.userId
 	};
 };
 
 const mapDispatchToProps = (dispatch) => {
 	return {
-		onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData))
+		onOrderBurger: (orderData, token) => dispatch(actions.purchaseBurger(orderData, token))
 	};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData,axios));
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));

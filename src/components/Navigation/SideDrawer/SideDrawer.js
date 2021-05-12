@@ -13,12 +13,12 @@ const sideDrawer = (props) => {
 	return (
 		<Auxiliary>
 			<Backdrop show={props.open} clicked={props.closeSideDrawer} />
-			<div className={sideDrawerClasses.join(' ')}>
+			<div className={sideDrawerClasses.join(' ')} onClick={props.closeSideDrawer}>
 				<div className={classes.Logo}>
 					<Logo />
 				</div>
 				<nav>
-					<NavigationItems />
+					<NavigationItems isAuthenticated={props.isAuth} />
 				</nav>
 			</div>
 		</Auxiliary>
